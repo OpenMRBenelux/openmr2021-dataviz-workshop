@@ -1,0 +1,10 @@
+# This package allows downloading data
+awscli
+
+# Packages for the notebook
+pandas
+numpy
+matplotlib
+seaborn
+nilearn
+nibabel
