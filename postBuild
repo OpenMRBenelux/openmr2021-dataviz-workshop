@@ -1,0 +1,2 @@
+aws s3 sync --no-sign-request s3://openneuro.org/datasets/ds000201/versions/1.0.3 ds000201-download/ --exclude "*" --include "participants.json" --include "sub-9001/ses1/anat/sub-9001_ses-1_T1w.nii.gz"
+aws s3 sync --no-sign-request --exclude "*" --include "participants.tsv" s3://openneuro.org/datasets/ds000201 ds000201-download/
