@@ -4,4 +4,3 @@ octave
 liboctave-dev
 gnuplot
 ghostscript
-git-annex

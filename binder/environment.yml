@@ -8,6 +8,8 @@ dependencies:
   - python=3.8.*
   - pip
   - git
+  - git-annex
+  - awscli
   - pandas
   - numpy
   - seaborn
@@ -20,5 +22,5 @@ dependencies:
   - texinfo
 
   - pip:
-    - pybids==0.12.3 # to query bids datasets 
-    - datalad-installer
+      - pybids==0.12.3 # to query bids datasets
+      - datalad-installer

@@ -1,6 +1,3 @@
-datalad-installer git-annex -m datalad/packages
-
-mkdir inputs
 aws s3 sync --no-sign-request s3://openneuro.org/ds003542 inputs/ds003542 --exclude "*" --include "participants.*" --include "dataset*" --include "README" --include "sub-01/anat/sub-01_T1w.nii.*" --include "sub-01/func/sub-01_task-compL1_run-1_*"
 
 mkdir ${HOME}/lib
