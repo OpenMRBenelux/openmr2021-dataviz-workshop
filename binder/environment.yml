@@ -1,3 +1,24 @@
+name: dataviz_python
+
+channels:
+  - default
+  - conda-forge
+
 dependencies:
-- octave_kernel
-- texinfo
+  - python=3.8.*
+  - pip
+  - git
+  - pandas
+  - numpy
+  - seaborn
+  - matplotlib
+  - nilearn=0.7.1
+  - nibabel
+  - nb_black=1.0.7 # to use the black linter in jupyter books
+  - datalad=0.13
+  - octave_kernel
+  - texinfo
+
+  - pip:
+    - pybids==0.12.3 # to query bids datasets 
+    - datalad-installer
