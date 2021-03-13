@@ -1,4 +1,6 @@
-aws s3 sync --no-sign-request s3://openneuro.org/ds003542 inputs/ds003542 --exclude "*" --include "participants.*" --include "dataset*" --include "README" --include "sub-01/anat/sub-01_T1w.nii.*" --include "sub-01/func/sub-01_task-compL1_run-1_*"
+datalad clone https://github.com/OpenNeuroDatasets/ds003542.git ../inputs/ds003542/
+datalad get ../inputs/test/sub-01/anat/*
+datalad get ../inputs/test/sub-01/func/sub-01_task-compL1_run-1_bold.*
 
 mkdir ${HOME}/lib
 mkdir ${HOME}/lib/spm12 && curl -SL https://github.com/spm/spm12/archive/r7487.tar.gz | tar -xzC ${HOME}/lib/spm12 --strip-components 1

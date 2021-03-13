@@ -9,7 +9,6 @@ dependencies:
   - pip
   - git
   - git-annex
-  - awscli
   - pandas
   - numpy
   - seaborn
