@@ -33,8 +33,6 @@ conda env update -n dataviz_pythonv -f ./binder/environment.yml
 ## Download the required data
 
 <!-- TODO improve datalad install instruction -->
-<!-- TODO add datalad to binder -->
-<!-- datalad-installer git-annex -m datalad/packages -->
 
 We are using the fact that the openneuro datasets can be accessed through their
 siblings on github:
@@ -46,6 +44,6 @@ http://handbook.datalad.org/en/latest/basics/101-180-FAQ.html#how-does-datalad-i
 
 ```bash
 datalad clone https://github.com/OpenNeuroDatasets/ds003542.git inputs/ds003542/
-datalad get inputs/ds003542/sub-01/func/sub-01_task-compL1_run-1_bold.nii.gz
+datalad get inputs/ds003542/sub-01/func/sub-01_task-compL1_run-1*
 datalad get inputs/ds003542/sub-01/anat/
 ```
