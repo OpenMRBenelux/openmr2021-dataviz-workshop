@@ -1,3 +1,4 @@
+mkdir ${HOME}/lib
 mkdir ${HOME}/lib/spm12 && curl -SL https://github.com/spm/spm12/archive/r7487.tar.gz | tar -xzC ${HOME}/lib/spm12 --strip-components 1
 curl -SL https://raw.githubusercontent.com/spm/spm-docker/master/octave/spm12_r7487.patch | patch -d ${HOME}/lib/spm12 -p3
 
@@ -12,7 +13,7 @@ find . -name "file2mat*.*" -print0 | xargs -0 -I{} find '{}' \! -name "*.mex" -d
 cd ${HOME}
 octave --no-gui --eval "addpath (fullfile (getenv (\"HOME\"), \"lib\", \"spm12\")); savepath ();"
 
-aws s3 sync --no-sign-request s3://openneuro.org/ds003542 inputs/ds003542 --exclude "*" --include "participants.tsv" --include "participants.json" --include "README" --include "sub-01/anat/sub-01_T1w.nii.gz" --include "sub-01/func/sub-01_task-compL1_run-1_bold.nii.gz"
+aws s3 sync --no-sign-request s3://openneuro.org/ds003542 inputs/ds003542 --exclude "*" --include "participants.*" --include "dataset*" --include "README" --include "sub-01/anat/sub-01_T1w.nii.*" --include "sub-01/func/sub-01_task-compL1_run-1_*"
 
 
 
