@@ -1,19 +1,28 @@
+# Git set up
+git config --global --add user.name "Ford Escort"
+git config --global --add user.email 42@H2G2.com
+
+# Get data
 datalad clone https://github.com/OpenNeuroDatasets/ds003542.git inputs/ds003542/
 datalad get inputs/ds003542/sub-01/anat/*
 datalad get inputs/ds003542/sub-01/func/sub-01_task-compL1_run-1_bold.*
 
+# download SPM and patch
 mkdir ${HOME}/lib
 mkdir ${HOME}/lib/spm12 && curl -SL https://github.com/spm/spm12/archive/r7487.tar.gz | tar -xzC ${HOME}/lib/spm12 --strip-components 1
 curl -SL https://raw.githubusercontent.com/spm/spm-docker/master/octave/spm12_r7487.patch | patch -d ${HOME}/lib/spm12 -p3
 
+# recompile SPM to work with octave
 cd ${HOME}/lib/spm12/src
 make PLATFORM=octave
 make PLATFORM=octave install
 
+# hack to make SPM work on binder
 cd ${HOME}/lib/spm12/@file_array/private
 find . -name "mat2file*.*" -print0 | xargs -0 -I{} find '{}' \! -name "*.mex" -delete
 find . -name "file2mat*.*" -print0 | xargs -0 -I{} find '{}' \! -name "*.mex" -delete
 
+# Add SPM to octave path
 cd ${HOME}
 octave --no-gui --eval "addpath (fullfile (getenv (\"HOME\"), \"lib\", \"spm12\")); savepath ();"
 
