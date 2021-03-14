@@ -109,6 +109,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+envs/
 
 # Spyder project settings
 .spyderproject
@@ -128,7 +129,5 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
-
 # Self-added files and directories
-ds003542-download/
+inputs/ds003542
