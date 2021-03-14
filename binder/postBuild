@@ -3,7 +3,10 @@ git config --global --add user.name "Ford Escort"
 git config --global --add user.email 42@H2G2.com
 
 # Get data
-datalad clone https://github.com/OpenNeuroDatasets/ds003542.git inputs/ds003542/
+
+openneuro_dataset=ds003542
+
+datalad clone https://github.com/OpenNeuroDatasets/$openneuro_dataset.git inputs/$openneuro_dataset/
 datalad get inputs/ds003542/sub-01/anat/*
 datalad get inputs/ds003542/sub-01/func/sub-01_task-compL1_run-1_bold.*
 
