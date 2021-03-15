@@ -14,14 +14,13 @@ def show_anatomical_slice(image, orientation, slice_nr):
     Slice, x_lab, y_lab = _get_slice(image, orientation, slice_nr)
 
     # Plot
-    fig,ax = plt.subplots(figsize = (8,8))
-    ax.set_title(f'{orientation} slice #{slice_nr}', fontsize = 20)
-    ax.set_xlabel(x_lab, fontsize = 20)
-    ax.set_ylabel(y_lab, fontsize = 20)
-    ax.imshow(Slice.T, cmap="gray", origin="lower")  # .T and "lower" are important for orientation
-    
-    
-def show_functional_slice(image, orientation, slice_nr, timepoint, color_map = 'coolwarm'):
+    fig, ax = plt.subplots(figsize=(8, 8))
+    show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab)
+
+
+def show_functional_slice(
+    image, orientation, slice_nr, timepoint, color_map="coolwarm"
+):
     """
     Shows a preferred slice from the 4D nifti image, for a specific timepoint
     Indexing: [Medio-lateral, Antero-posterior, Cranio-caudal, Time]
@@ -35,14 +34,11 @@ def show_functional_slice(image, orientation, slice_nr, timepoint, color_map = '
     
     # Get desired slice and the according x and y labels
     image_3D = image[:,:,:,timepoint]
-    Slice, x_lab, y_lab = _get_slice(image_3D, orientation, slice_nr)
+    slice, x_lab, y_lab = _get_slice(image_3D, orientation, slice_nr)
 
     # Plot
-    fig,ax = plt.subplots(figsize = (8,8))
-    ax.set_title(f'{orientation} slice #{slice_nr}', fontsize = 20)
-    ax.set_xlabel(x_lab, fontsize = 20)
-    ax.set_ylabel(y_lab, fontsize = 20)
-    ax.imshow(Slice.T, cmap=color_map, origin="lower")  # .T and "lower" are important for orientation
+    fig, ax = plt.subplots(figsize=(8, 8))
+    show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab, color_map)
 
 
 def track_voxel(image, ML_position, AP_position, CC_position, slice_timepoint = 0, color_map = 'coolwarm', voxel_color = 'white', plot_voxel_in_slice = True):
@@ -58,6 +54,7 @@ def track_voxel(image, ML_position, AP_position, CC_position, slice_timepoint = 
     :param color_map: str, color map that you want to use for fancy slice plotting
     """
     
+    font_size = 18
     # Get 1D vector containing the voxel's value over time
     voxel_over_time = image[ML_position, AP_position, CC_position, :]
     
@@ -80,14 +77,10 @@ def track_voxel(image, ML_position, AP_position, CC_position, slice_timepoint = 
         
         # Get slice and corresponding x and y label
         image_3D = image[:,:,:,slice_timepoint]
-        Slice, x_lab, y_lab = _get_slice(image_3D, orientation, slice_nr)
-        
-        # Aesthetics of slice image
-        ax.set_title(f'{orientation} slice #{slice_nr}', fontsize = 18)
-        ax.set_xlabel(x_lab, fontsize = 18)
-        ax.set_ylabel(y_lab, fontsize = 18)
-        ax.imshow(Slice.T, cmap=color_map, origin="lower")  # .T and "lower" are important for orientation
-        
+        slice, x_lab, y_lab = _get_slice(image_3D, orientation, slice_nr)
+
+        show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab, color_map, font_size)
+
         # Plot position of voxel inside slice in red
         if plot_voxel_in_slice:
             x_y_voxel = [ML_position, AP_position, CC_position]
