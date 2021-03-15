@@ -102,6 +102,19 @@ def track_voxel(image, ML_position, AP_position, CC_position, slice_timepoint = 
     plt.show()
     
 
+def show_slice(
+    ax, slice, orientation, slice_nr, x_lab, y_lab, color_map="gray", font_size=20
+):
+
+    # Plot
+    ax.set_title(f"{orientation} slice #{slice_nr}", fontsize=font_size)
+    ax.set_xlabel(x_lab, fontsize=font_size)
+    ax.set_ylabel(y_lab, fontsize=font_size)
+    ax.imshow(
+        slice.T, cmap=color_map, origin="lower"
+    )  # .T and "lower" are important for orientation
+
+
 def _get_slice(image, orientation, slice_nr):
     """
     Get preferred slice from 3D or 4D nifti image
