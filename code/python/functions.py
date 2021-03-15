@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 def show_anatomical_slice(image, orientation, slice_nr):
     """
     Shows a preferred slice from the 3D nifti image
@@ -9,7 +10,7 @@ def show_anatomical_slice(image, orientation, slice_nr):
     :param orientation: str, choose from ["sagittal", "frontal", "axial"]
     :param slice_nr: int, desired slice number
     """
-    
+
     # Get desired slice and the according x and y labels
     slice, x_lab, y_lab = _get_slice(image, orientation, slice_nr)
 
@@ -31,9 +32,9 @@ def show_functional_slice(
     :param timepoint: int, desired timepoint
     :param color_map: str, color map that you want to use for fancy slice plotting
     """
-    
+
     # Get desired slice and the according x and y labels
-    image_3D = image[:,:,:,timepoint]
+    image_3D = image[:, :, :, timepoint]
     slice, x_lab, y_lab = _get_slice(image_3D, orientation, slice_nr)
 
     # Plot
@@ -41,7 +42,16 @@ def show_functional_slice(
     show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab, color_map)
 
 
-def track_voxel(image, ML_position, AP_position, CC_position, slice_timepoint = 0, color_map = 'coolwarm', voxel_color = 'white', plot_voxel_in_slice = True):
+def track_voxel(
+    image,
+    ML_position,
+    AP_position,
+    CC_position,
+    slice_timepoint=0,
+    color_map="coolwarm",
+    voxel_color="white",
+    plot_voxel_in_slice=True,
+):
     """
     Tracks the BOLD signal within a voxel over time
     Indexing: [Medio-lateral, Antero-posterior, Cranio-caudal]
@@ -53,30 +63,34 @@ def track_voxel(image, ML_position, AP_position, CC_position, slice_timepoint = 
     :param slice_timepoint: int, at which timepoint you want to show the slices
     :param color_map: str, color map that you want to use for fancy slice plotting
     """
-    
+
     font_size = 18
+
     # Get 1D vector containing the voxel's value over time
     voxel_over_time = image[ML_position, AP_position, CC_position, :]
-    
-    # Plotting
-    # 0. Create figure and different subplots - Source: https://www.geeksforgeeks.org/how-to-create-different-subplot-sizes-in-matplotlib/
-    fig = plt.figure() 
-    fig.set_figheight(20)
-    fig.set_figwidth(20) 
 
-    axSagit = plt.subplot2grid(shape=(3, 3), loc=(0, 0), colspan=1) 
-    axFront = plt.subplot2grid(shape=(3, 3), loc=(0, 1), colspan=1) 
-    axAxial = plt.subplot2grid(shape=(3, 3), loc=(0, 2), colspan=2) 
-    axTime = plt.subplot2grid(shape=(3,3), loc =(1,0), colspan = 3)
-    
+    # Plotting
+    # 0. Create figure and different subplots
+    # Source: https://www.geeksforgeeks.org/how-to-create-different-subplot-sizes-in-matplotlib/
+    fig = plt.figure()
+    fig.set_figheight(20)
+    fig.set_figwidth(20)
+
+    axSagit = plt.subplot2grid(shape=(3, 3), loc=(0, 0), colspan=1)
+    axFront = plt.subplot2grid(shape=(3, 3), loc=(0, 1), colspan=1)
+    axAxial = plt.subplot2grid(shape=(3, 3), loc=(0, 2), colspan=2)
+    axTime = plt.subplot2grid(shape=(3, 3), loc=(1, 0), colspan=3)
+
     # 1. Plot position of voxel on all 3 slices
     # Create 1 plot per orientation in a for-loop
-    for orientation, ax, slice_nr in zip(['sagittal', 'frontal', 'axial'], 
-                                         [axSagit, axFront, axAxial], 
-                                         [ML_position, AP_position, CC_position]):
-        
+    for orientation, ax, slice_nr in zip(
+        ["sagittal", "frontal", "axial"],
+        [axSagit, axFront, axAxial],
+        [ML_position, AP_position, CC_position],
+    ):
+
         # Get slice and corresponding x and y label
-        image_3D = image[:,:,:,slice_timepoint]
+        image_3D = image[:, :, :, slice_timepoint]
         slice, x_lab, y_lab = _get_slice(image_3D, orientation, slice_nr)
 
         show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab, color_map, font_size)
@@ -84,16 +98,18 @@ def track_voxel(image, ML_position, AP_position, CC_position, slice_timepoint = 
         # Plot position of voxel inside slice in red
         if plot_voxel_in_slice:
             x_y_voxel = [ML_position, AP_position, CC_position]
-            x_y_voxel.remove(slice_nr)  # Only retain 2 necessary positions (x and y) from all positions
-            ax.scatter(x_y_voxel[0], x_y_voxel[1], color = voxel_color)
-        
+            x_y_voxel.remove(
+                slice_nr
+            )  # Only retain 2 necessary positions (x and y) from all positions
+            ax.scatter(x_y_voxel[0], x_y_voxel[1], color=voxel_color)
+
     # 2. Plot voxel over time
     axTime.plot(voxel_over_time)
-    axTime.set_title('BOLD signal inside voxel over time', fontsize = 18)
-    axTime.set_xlabel('Timepoint', fontsize = 18)
-    axTime.set_ylabel('BOLD signal', fontsize = 18)
+    axTime.set_title("BOLD signal inside voxel over time", fontsize=font_size)
+    axTime.set_xlabel("Timepoint", fontsize=font_size)
+    axTime.set_ylabel("BOLD signal", fontsize=font_size)
     plt.show()
-    
+
 
 def show_slice(
     ax, slice, orientation, slice_nr, x_lab, y_lab, color_map="gray", font_size=20
@@ -118,23 +134,31 @@ def _get_slice(image, orientation, slice_nr):
     :param slice_nr: int, desired slice number
     :output: Slice: np array, x_lab: xlabel, y_lab: ylabel
     """
-    
+
     # Get desired slice and the according x and y labels
-    if orientation == 'sagittal':
-        # Medio-Lateral: slice_nr, Antero-posterior: all voxels, Cranio-caudal: all voxels, Time: timepoint
+    if orientation == "sagittal":
+        # Medio-Lateral: slice_nr,
         # Antero-posterior: all voxels,
-        y_lab = 'Cranio-caudal'
-        x_lab = 'Antero-posterior'
+        # Cranio-caudal: all voxels,
+        # Time: timepoint
         slice = image[slice_nr, :, :]
-        # Medio-Lateral: all voxels, Antero-posterior: slice_nr, Cranio-caudal: all_voxels, Time: timepoint
-        Slice = image[:,slice_nr,:] 
-        y_lab = 'Cranio-caudal'
-        x_lab = 'Medio-lateral'
-    elif orientation == 'axial':
-        # Medio-Lateral: all voxels, Antero-posterior: all voxels, Cranio-caudal: slice_nr, Time: timepoint
+        y_lab = "Cranio-caudal"
+        x_lab = "Antero-posterior"
+    elif orientation == "frontal":
+        # Medio-Lateral: all voxels,
+        # Antero-posterior: slice_nr,
+        # Cranio-caudal: all_voxels,
+        # Time: timepoint
         slice = image[:, slice_nr, :]
+        y_lab = "Cranio-caudal"
+        x_lab = "Medio-lateral"
+    elif orientation == "axial":
+        # Medio-Lateral: all voxels,
+        # Antero-posterior: all voxels,
+        # Cranio-caudal: slice_nr,
         # Time: timepoint
         slice = image[:, :, slice_nr]
-        x_lab = 'Medio-lateral'
+        y_lab = "Antero-posterior"
+        x_lab = "Medio-lateral"
 
     return slice, x_lab, y_lab
