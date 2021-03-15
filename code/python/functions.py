@@ -11,7 +11,7 @@ def show_anatomical_slice(image, orientation, slice_nr):
     """
     
     # Get desired slice and the according x and y labels
-    Slice, x_lab, y_lab = _get_slice(image, orientation, slice_nr)
+    slice, x_lab, y_lab = _get_slice(image, orientation, slice_nr)
 
     # Plot
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -122,18 +122,19 @@ def _get_slice(image, orientation, slice_nr):
     # Get desired slice and the according x and y labels
     if orientation == 'sagittal':
         # Medio-Lateral: slice_nr, Antero-posterior: all voxels, Cranio-caudal: all voxels, Time: timepoint
-        Slice = image[slice_nr,:,:]
+        # Antero-posterior: all voxels,
         y_lab = 'Cranio-caudal'
         x_lab = 'Antero-posterior'
-    elif orientation == 'frontal':
+        slice = image[slice_nr, :, :]
         # Medio-Lateral: all voxels, Antero-posterior: slice_nr, Cranio-caudal: all_voxels, Time: timepoint
         Slice = image[:,slice_nr,:] 
         y_lab = 'Cranio-caudal'
         x_lab = 'Medio-lateral'
     elif orientation == 'axial':
         # Medio-Lateral: all voxels, Antero-posterior: all voxels, Cranio-caudal: slice_nr, Time: timepoint
-        Slice = image[:,:,slice_nr]
-        y_lab = 'Antero-posterior'
+        slice = image[:, slice_nr, :]
+        # Time: timepoint
+        slice = image[:, :, slice_nr]
         x_lab = 'Medio-lateral'
 
-    return Slice, x_lab, y_lab
+    return slice, x_lab, y_lab
