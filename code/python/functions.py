@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 def show_slice(
     image, orientation, slice_nr, timepoint, color_map = None
