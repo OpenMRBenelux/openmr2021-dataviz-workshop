@@ -1,42 +1,32 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
-
-def show_anatomical_slice(image, orientation, slice_nr):
-    """
-    Shows a preferred slice from the 3D nifti image
-    Indexing: [Medio-lateral, Antero-posterior, Cranio-caudal]
-    
-    :param image: 3D numpy array with grey values
-    :param orientation: str, choose from ["sagittal", "frontal", "axial"]
-    :param slice_nr: int, desired slice number
-    """
-
-    # Get desired slice and the according x and y labels
-    slice, x_lab, y_lab = _get_slice(image, orientation, slice_nr)
-
-    # Plot
-    fig, ax = plt.subplots(figsize=(8, 8))
-    show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab)
-
-
-def show_functional_slice(
-    image, orientation, slice_nr, timepoint, color_map="coolwarm"
+def show_slice(
+    image, orientation, slice_nr, timepoint, color_map = None
 ):
     """
-    Shows a preferred slice from the 4D nifti image, for a specific timepoint
+    Shows a preferred slice from the 3D/4D nifti image, for a specific timepoint if applicable
     Indexing: [Medio-lateral, Antero-posterior, Cranio-caudal, Time]
     
-    :param image: 4D numpy array with grey values
+    :param image: numpy array with grey values
     :param orientation: str, choose from ["sagittal", "frontal", "axial"]
     :param slice_nr: int, desired slice number
     :param timepoint: int, desired timepoint
     :param color_map: str, color map that you want to use for fancy slice plotting
     """
-
+    
+    if image.ndim > 3:   
+        # Extract desired timepoint
+        image = image[:, :, :, timepoint]
+    
     # Get desired slice and the according x and y labels
-    image_3D = image[:, :, :, timepoint]
-    slice, x_lab, y_lab = _get_slice(image_3D, orientation, slice_nr)
+    slice, x_lab, y_lab = _get_slice(image, orientation, slice_nr)
 
+    # Get default color map if applicable: gray for anatomical, coolwarm for functional
+    default_color_maps = {3:"gray", 4:"coolwarm"}
+    if color_map is None:
+        default_color_maps.get(image.ndim)
+        
     # Plot
     fig, ax = plt.subplots(figsize=(8, 8))
     show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab, color_map)
@@ -111,19 +101,6 @@ def track_voxel(
     plt.show()
 
 
-def show_slice(
-    ax, slice, orientation, slice_nr, x_lab, y_lab, color_map="gray", font_size=20
-):
-
-    # Plot
-    ax.set_title(f"{orientation} slice #{slice_nr}", fontsize=font_size)
-    ax.set_xlabel(x_lab, fontsize=font_size)
-    ax.set_ylabel(y_lab, fontsize=font_size)
-    ax.imshow(
-        slice.T, cmap=color_map, origin="lower"
-    )  # .T and "lower" are important for orientation
-
-
 def _get_slice(image, orientation, slice_nr):
     """
     Get preferred slice from 3D or 4D nifti image
@@ -162,3 +139,13 @@ def _get_slice(image, orientation, slice_nr):
         x_lab = "Medio-lateral"
 
     return slice, x_lab, y_lab
+
+
+def simulate_volume(age, intercept, slope):
+    # Predict the volume on regression line
+    volume = intercept + slope*age
+    # Add noise (mean = 0, std = intercept/50)
+    noise = np.random.normal(0,intercept/50,1)[0]
+    volume += noise
+    
+    return volume
