@@ -130,7 +130,7 @@ dmypy.json
 .pyre/
 
 # Self-added files and directories
-inputs/ds003542
+inputs/ds*
 #octave and matlab files
 octave-workspace
 *.m~
