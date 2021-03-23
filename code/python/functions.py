@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def show_slice(
-    image, orientation, slice_nr, timepoint, color_map = None
+    image, orientation, slice_nr, timepoint = None, color_map = None
 ):
     """
     Shows a preferred slice from the 3D/4D nifti image, for a specific timepoint if applicable
@@ -15,7 +15,7 @@ def show_slice(
     :param color_map: str, color map that you want to use for fancy slice plotting
     """
     
-    if image.ndim > 3:   
+    if timepoint is not None: 
         # Extract desired timepoint
         image = image[:, :, :, timepoint]
     
@@ -25,11 +25,29 @@ def show_slice(
     # Get default color map if applicable: gray for anatomical, coolwarm for functional
     default_color_maps = {3:"gray", 4:"coolwarm"}
     if color_map is None:
-        default_color_maps.get(image.ndim)
+        color_map = default_color_maps.get(image.ndim)
         
     # Plot
     fig, ax = plt.subplots(figsize=(8, 8))
-    show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab, color_map)
+    _plot_slice(ax, slice, slice_nr, orientation, x_lab, y_lab, color_map)
+
+    
+def _plot_slice(ax, slice, slice_nr, orientation, x_lab, y_lab, color_map):
+    """
+    Plot a slice on an ax object, along with labels and titles
+    
+    :param ax: matplotlib ax object
+    :param slice: 2D numpy array with grey values
+    :param slice_nr: int, the slice number
+    :param orientation: str, choose from ["sagittal", "frontal", "axial"]
+    :param slice_nr: int, desired slice number
+    :param timepoint: int, desired timepoint
+    :param color_map: str, color map that you want to use for fancy slice plotting
+    """
+    ax.imshow(slice.T, cmap = color_map, origin = "lower")
+    ax.set_title(f'Slice #{slice_nr} - {orientation}', fontsize = 18)
+    ax.set_xlabel(x_lab, fontsize = 18)
+    ax.set_ylabel(y_lab, fontsize = 18)
 
 
 def track_voxel(
@@ -83,7 +101,7 @@ def track_voxel(
         image_3D = image[:, :, :, slice_timepoint]
         slice, x_lab, y_lab = _get_slice(image_3D, orientation, slice_nr)
 
-        show_slice(ax, slice, orientation, slice_nr, x_lab, y_lab, color_map, font_size)
+        _plot_slice(ax, slice, slice_nr, orientation, x_lab, y_lab, color_map)
 
         # Plot position of voxel inside slice in red
         if plot_voxel_in_slice:
@@ -142,8 +160,17 @@ def _get_slice(image, orientation, slice_nr):
 
 
 def simulate_volume(age, intercept, slope):
+    """ 
+    Predict a volume based on an age, according to a 1D regression equation and some Gaussian noise.
+    
+    :param age: the age of the subject
+    :param intercept: intercept of the regression line between age and volume
+    :param slope: slope of the regression line between age and volume
+    """
+    
     # Predict the volume on regression line
     volume = intercept + slope*age
+    
     # Add noise (mean = 0, std = intercept/50)
     noise = np.random.normal(0,intercept/50,1)[0]
     volume += noise
