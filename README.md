@@ -1,4 +1,4 @@
-# Repository for OpenMR Virtual 2021 data visualisation workshop - Python
+# Repository for OpenMR Virtual 2021 data visualisation workshop
 
 To open the Jupyter Notebook in a Binder environment, click the following link:
 
